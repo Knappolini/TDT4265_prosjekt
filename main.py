@@ -102,7 +102,7 @@ for epoch in range(max_epochs):
     if val_acc > best_val_acc:
         best_val_acc = val_acc
         torch.save(model.state_dict(), "best_model.pth")
-        print("✅ Saved new best model")
+        print("Saved new best model")
 
     # ===== TIMING =====
     epoch_time = time.time() - epoch_start
