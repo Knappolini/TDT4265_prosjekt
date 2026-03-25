@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 import pandas as pd
 
-root_dir = 'C:/Users/joh-k/OneDrive/Dokumenter/Fag_vaaren_26/TDT4265/Dataset/ODELIA2025/data'
 
 def build_dataset_submission(root_dir):
     root = Path(root_dir)
@@ -53,7 +52,7 @@ def build_dataset_submission(root_dir):
 
                 sample = {
                     "image": [str(f) for f in selected_files],
-                    "id": f"{uid}_{breast}"  # ✅ REQUIRED FOR CSV
+                    "uid": f"{uid}_{breast}"  # ✅ REQUIRED FOR CSV
                 }
 
                 test_data.append(sample)
@@ -61,9 +60,3 @@ def build_dataset_submission(root_dir):
     print(f"\nRSH Test samples: {len(test_data)}")
 
     return test_data
-
-
-test_data = build_dataset_submission(root_dir)
-
-print(test_data[0])
-print(len(test_data))
