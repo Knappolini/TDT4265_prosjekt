@@ -56,4 +56,4 @@ with torch.no_grad():
 df = pd.DataFrame(results)
 df.to_csv("predictions.csv", index=False)
 
-print("✅ Predictions saved to predictions.csv")
+print("Predictions saved to predictions.csv")
