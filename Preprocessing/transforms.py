@@ -1,7 +1,7 @@
 import torch
 from monai.data import Dataset , DataLoader
-from Preprocessing import build_datasets
-
+from Preprocessing.build_datasets import build_datasets
+from Preprocessing.build_datasets_5channels import build_datasets_5channels
 from torch.utils.data import Subset
 
 from monai.transforms import (
@@ -20,10 +20,10 @@ from monai.transforms import (
 )
 
 #Laptop
-data_dir = 'C:/Users/joh-k/OneDrive/Dokumenter/Fag_vaaren_26/TDT4265/Dataset/ODELIA2025/data'
+# data_dir = 'C:/Users/joh-k/OneDrive/Dokumenter/Fag_vaaren_26/TDT4265/Dataset/ODELIA2025/data'
 
 #Cybele
-#data_dir = '/datasets/tdt4265/ODELIA2025'
+data_dir = '/datasets/tdt4265/ODELIA2025/data'
 
 #IDUN HPC
 #data_dir =  '/cluster/projects/vc/courses/TDT17/mic/ODELIA2025'
@@ -31,7 +31,9 @@ data_dir = 'C:/Users/joh-k/OneDrive/Dokumenter/Fag_vaaren_26/TDT4265/Dataset/ODE
 
 root_dir = data_dir
 
-train_data, val_data, test_data = build_datasets.build_datasets(root_dir)
+# train_data, val_data, test_data = build_datasets(root_dir)
+
+train_data, val_data, test_data = build_datasets_5channels(root_dir)
 
 # Load the images
 # Do the transforms

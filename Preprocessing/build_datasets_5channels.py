@@ -8,7 +8,7 @@ import pandas as pd
 
 data_dir = 'C:/Users/joh-k/OneDrive/Dokumenter/Fag_vaaren_26/TDT4265/Dataset/ODELIA2025/data'
 
-def build_datasets(root_dir):
+def build_datasets_5channels(root_dir):
     root = Path(root_dir)
 
     train_data = []
@@ -103,4 +103,3 @@ def build_datasets(root_dir):
     print(f"Test: {len(test_data)}")
 
     return train_data, val_data, test_data
-
