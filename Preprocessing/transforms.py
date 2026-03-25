@@ -37,9 +37,9 @@ root_dir = data_dir
 
 # train_data, val_data, test_data = build_datasets(root_dir)
 
-train_data, val_data, test_data = build_datasets_5channels(root_dir)
+# train_data, val_data, test_data = build_datasets_5channels(root_dir)
 
-# test_data = build_dataset_submission(root_dir)
+test_data = build_dataset_submission(root_dir)
 
 # Load the images
 # Do the transforms
@@ -142,17 +142,17 @@ test_transforms = Compose(
     ]
 )
 
-train_ds = Dataset(data = train_data, transform = train_transforms)
-train_loader = DataLoader(train_ds, batch_size = 2, shuffle = True, num_workers=4, pin_memory = True )
+# train_ds = Dataset(data = train_data, transform = train_transforms)
+# train_loader = DataLoader(train_ds, batch_size = 2, shuffle = True, num_workers=4, pin_memory = True )
 
-small_train_ds =Subset(train_loader.dataset, list(range(8)))
-small_train_loader = DataLoader(small_train_ds, batch_size=2,shuffle = True )
+# small_train_ds =Subset(train_loader.dataset, list(range(8)))
+# small_train_loader = DataLoader(small_train_ds, batch_size=2,shuffle = True )
 
-val_ds = Dataset(data = val_data ,transform = val_transforms )
-val_loader = DataLoader(val_ds, batch_size = 2, shuffle = False, num_workers= 4, pin_memory = True)
+# val_ds = Dataset(data = val_data ,transform = val_transforms )
+# val_loader = DataLoader(val_ds, batch_size = 2, shuffle = False, num_workers= 4, pin_memory = True)
 
-small_val_ds = Subset(val_loader.dataset, list(range(8)))
-small_val_loader = DataLoader(small_val_ds, batch_size=2)
+# small_val_ds = Subset(val_loader.dataset, list(range(8)))
+# small_val_loader = DataLoader(small_val_ds, batch_size=2)
 
 test_ds = Dataset(data = test_data ,transform = test_transforms )
 test_loader = DataLoader(test_ds, batch_size = 2, shuffle = False, num_workers= 4, pin_memory = True)
