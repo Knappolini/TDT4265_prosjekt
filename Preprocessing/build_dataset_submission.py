@@ -52,7 +52,7 @@ def build_dataset_submission(root_dir):
 
                 sample = {
                     "image": [str(f) for f in selected_files],
-                    "uid": f"{uid}_{breast}"  # ✅ REQUIRED FOR CSV
+                    "uid": f"{uid}"  # ✅ REQUIRED FOR CSV
                 }
 
                 test_data.append(sample)
