@@ -35,7 +35,7 @@ with torch.no_grad():
         images = batch["image"].to(device)
 
         # 👇 IMPORTANT: your dataset must include "id"
-        ids = batch["id"]
+        ids = batch["uid"]
 
         outputs = model(images)
         probs = torch.softmax(outputs, dim=1)
