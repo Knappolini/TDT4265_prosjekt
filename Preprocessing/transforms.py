@@ -86,7 +86,7 @@ test_transforms = Compose(
         ScaleIntensityd(keys=['image']),
         Resized(keys=['image'], spatial_size = (128,128,32)),
 
-        EnsureTyped(keys =  ['image', 'label']) 
+        EnsureTyped(keys =  ['image']) 
     ]
 )
 
@@ -101,4 +101,7 @@ val_loader = DataLoader(val_ds, batch_size = 2, shuffle = False, num_workers= 4,
 
 small_val_ds = Subset(val_loader.dataset, list(range(8)))
 small_val_loader = DataLoader(small_val_ds, batch_size=2)
+
+test_ds = Dataset(data = test_data ,transform = test_transforms )
+test_loader = DataLoader(test_ds, batch_size = 2, shuffle = False, num_workers= 4, pin_memory = True)
 
