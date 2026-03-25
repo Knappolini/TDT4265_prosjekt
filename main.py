@@ -33,7 +33,7 @@ scaler = torch.amp.GradScaler("cuda")
 # ======================
 # Training params
 # ======================
-max_epochs = 100
+max_epochs = 30
 best_val_acc = 0
 
 start_time = time.time()
