@@ -17,7 +17,10 @@ from monai.transforms import (
     RandBiasFieldd,
     RandGaussianNoised,
     RandGaussianSmoothd,
-    RandRotated
+    RandRotated,
+    RandFlipd,
+    RandZoomd,
+    RandSpatialCropd
 )
 
 #Laptop
@@ -45,27 +48,73 @@ train_data, val_data, test_data = build_datasets_5channels(root_dir)
 
 
 
-#Here i will load and augment the data used for training in order to get the most out of the limited data we have available for training
-train_transforms = Compose(
-    [
-        LoadImaged(keys = ['image']), #Load the image by reading all .nii.gz files and converting them to arrays
-        EnsureChannelFirstd(keys = ['image']), #Guarantees [C, H, W, D]
+# #Here i will load and augment the data used for training in order to get the most out of the limited data we have available for training
+# train_transforms = Compose(
+#     [
+#         LoadImaged(keys = ['image']), #Load the image by reading all .nii.gz files and converting them to arrays
+#         EnsureChannelFirstd(keys = ['image']), #Guarantees [C, H, W, D]
 
-        #Normalization
-        ScaleIntensityd(keys=['image']),#In order to normalize the data to the range [0, 1] for better performance of the neural network. Because MRI intensities vary across hospitals
-        Resized(keys=['image'], spatial_size = (128,128,32)), #Resize in order to deal with variable shapes and restrict the amount of memory needed
+#         #Normalization
+#         ScaleIntensityd(keys=['image']),#In order to normalize the data to the range [0, 1] for better performance of the neural network. Because MRI intensities vary across hospitals
+#         Resized(keys=['image'], spatial_size = (128,128,32)), #Resize in order to deal with variable shapes and restrict the amount of memory needed
 
-        #Augmentation
-        RandScaleIntensityd(keys=["image"], factors=0.1, prob=0.5), #Multiplies intensity by random factor to simulate different scanners
-        RandShiftIntensityd(keys=["image"], offsets=0.1, prob=0.5), #Adds random offset to simulate brightness differences
-        RandBiasFieldd(keys=["image"], prob=0.3), #applies smooth intensity distortion to simulate MRI coil artifacts ???
-        RandGaussianNoised(keys=["image"], prob=0.3, std=0.01), #Adds random white noise to simulate lower-quality scanners
-        RandGaussianSmoothd(keys=["image"], prob=0.2), #Blurs the image to simulate different scanner resolutions
-        RandRotated(keys=["image"],range_x=0.1,range_y=0.1,range_z=0.1,prob=0.3), #Small rotation to simulate patient positioning differences
+#         #Augmentation
+#         RandScaleIntensityd(keys=["image"], factors=0.1, prob=0.5), #Multiplies intensity by random factor to simulate different scanners
+#         RandShiftIntensityd(keys=["image"], offsets=0.1, prob=0.5), #Adds random offset to simulate brightness differences
+#         RandBiasFieldd(keys=["image"], prob=0.3), #applies smooth intensity distortion to simulate MRI coil artifacts ???
+#         RandGaussianNoised(keys=["image"], prob=0.3, std=0.01), #Adds random white noise to simulate lower-quality scanners
+#         RandGaussianSmoothd(keys=["image"], prob=0.2), #Blurs the image to simulate different scanner resolutions
+#         RandRotated(keys=["image"],range_x=0.1,range_y=0.1,range_z=0.1,prob=0.3), #Small rotation to simulate patient positioning differences
 
-        EnsureTyped(keys =  ['image', 'label']) #Last function to apply, we turn it into tensor after having applied all the transforms
-    ]
-)
+#         EnsureTyped(keys =  ['image', 'label']) #Last function to apply, we turn it into tensor after having applied all the transforms
+#     ]
+# )
+
+train_transforms = Compose([
+    LoadImaged(keys=['image']),
+    EnsureChannelFirstd(keys=['image']),
+
+    ScaleIntensityd(keys=['image']),
+    Resized(keys=['image'], spatial_size=(128,128,32)),
+
+    # Random flip (VERY important for MRI)
+    RandFlipd(keys=['image'], prob=0.5, spatial_axis=0),
+    RandFlipd(keys=['image'], prob=0.5, spatial_axis=1),
+
+    # Random rotation (stronger than before)
+    RandRotated(
+        keys=['image'],
+        range_x=0.2,
+        range_y=0.2,
+        range_z=0.2,
+        prob=0.5
+    ),
+
+    # Random zoom (CRITICAL)
+    RandZoomd(
+        keys=['image'],
+        min_zoom=0.9,
+        max_zoom=1.1,
+        prob=0.5
+    ),
+
+    # Random spatial crop (VERY powerful)
+    RandSpatialCropd(
+        keys=['image'],
+        roi_size=(112,112,28),
+        random_size=False
+    ),
+
+    RandScaleIntensityd(keys=["image"], factors=0.1, prob=0.3),
+    RandShiftIntensityd(keys=["image"], offsets=0.1, prob=0.3),
+
+    RandGaussianNoised(keys=["image"], prob=0.2, std=0.01),
+
+    # Bias field is good for MRI → keep
+    RandBiasFieldd(keys=["image"], prob=0.3),
+
+    EnsureTyped(keys=['image', 'label'])
+])
 
 #Load the data, no augmentation as this is validation set
 val_transforms = Compose(
